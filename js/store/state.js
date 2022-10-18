@@ -1,50 +1,48 @@
-state = (() => {
-  function init() {
-    if (!storage.getItem("datedMatches")) {
-      loadMatches([]);
+import * as storage from "/js/lib/storage.js";
+
+export function init() {
+  if (!storage.getItem("datedMatches")) {
+    loadMatches([]);
+  }
+
+  if (!storage.getItem("selectedDate")) {
+    selectDate(dates().reverse()[0] || null);
+  }
+}
+
+export function loadMatches(matches) {
+  const datedMatches = {};
+
+  for (const match of matches) {
+    if (!datedMatches[match.date]) {
+      datedMatches[match.date] = [];
     }
-
-    if (!storage.getItem("selectedDate")) {
-      selectDate(dates().reverse()[0] || null);
-    }
+    datedMatches[match.date].push(match);
   }
 
-  function loadMatches(matches) {
-    const datedMatches = {};
+  storage.setItem("datedMatches", datedMatches);
+}
 
-    for (const match of matches) {
-      if (!datedMatches[match.date]) {
-        datedMatches[match.date] = [];
-      }
-      datedMatches[match.date].push(match);
-    }
+export function selectDate(date) {
+  storage.setItem("selectedDate", date);
+}
 
-    storage.setItem("datedMatches", datedMatches);
+export function selectedDate() {
+  return storage.getItem("selectedDate");
+}
+
+export function dates() {
+  return Object.keys(storage.getItem("datedMatches")).sort();
+}
+
+export function matches(date) {
+  if (date) {
+    return storage.getItem("datedMatches")[date];
   }
 
-  function selectDate(date) {
-    storage.setItem("selectedDate", date);
+  const matches = [];
+  for (const ms of Object.values(storage.getItem("datedMatches"))) {
+    matches.push(...ms);
   }
-
-  function selectedDate() {
-    return storage.getItem("selectedDate");
-  }
-
-  function dates() {
-    return Object.keys(storage.getItem("datedMatches")).sort();
-  }
-
-  function matches(date) {
-    if (date) {
-      return storage.getItem("datedMatches")[date];
-    }
-
-    const matches = [];
-    for (const ms of Object.values(storage.getItem("datedMatches"))) {
-      matches.push(...ms);
-    }
-    return matches;
-  }
-
-  return { init, loadMatches, dates, selectDate, selectedDate, matches };
-})();
+  return matches;
+}

@@ -1,4 +1,6 @@
-function app(page, handlers) {
+import * as doc from "/js/lib/dom.js";
+
+export default function app(page, handlers) {
   const self = {};
 
   self.handle = ({ action, ...data }) => {

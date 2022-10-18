@@ -1,27 +1,23 @@
-storage = (() => {
-  function length() {
-    return localStorage.length()
-  }
+export function length() {
+  return localStorage.length();
+}
 
-  function key(index) {
-    return localStorage.key(index)
-  }
+export function key(index) {
+  return localStorage.key(index);
+}
 
-  function getItem(key) {
-    return JSON.parse(localStorage.getItem(key))
-  }
+export function getItem(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
 
-  function setItem(key, value) {
-    localStorage.setItem(key, JSON.stringify(value))
-  }
+export function setItem(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
 
-  function removeItem(key) {
-    localStorage.removeItem(key)
-  }
+export function removeItem(key) {
+  localStorage.removeItem(key);
+}
 
-  function clear() {
-    localStorage.clear()
-  }
-
-  return { length, key, getItem, setItem, removeItem, clear }
-})()
+export function clear() {
+  localStorage.clear();
+}

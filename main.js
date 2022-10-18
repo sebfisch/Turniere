@@ -1,14 +1,12 @@
-main = (() => {
-  function init() {
-    state.init();
-  }
+import { default as app } from "/js/lib/app.js";
 
-  function showResults({ date }) {
-    state.selectDate(date);
-  }
+import * as state from "/js/store/state.js";
+import * as results from "/js/page/results.js";
 
-  return app(results.page, { init, showResults });
-})();
+window.main = app(results.page, {
+  init: () => state.init(),
+  showResults: ({ date }) => state.selectDate(date),
+});
 
 window.addEventListener("load", () => main.handle({ action: "init" }));
 
