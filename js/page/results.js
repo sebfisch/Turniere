@@ -1,5 +1,5 @@
 import * as util from "/js/util.js";
-import * as doc from "/js/lib/dom.js";
+import * as html from "/js/lib/html.js";
 import * as state from "/js/store/state.js";
 
 export function page() {
@@ -13,11 +13,11 @@ export function page() {
 
   return [
     datesList(state.dates(), state.selectedDate()),
-    doc.elem("main", {}, [
-      doc.elem("section", { class: "ranking" }, [
+    html.elem("main", {}, [
+      html.elem("section", { class: "ranking" }, [
         rankingTable(util.ranking(state.matches(state.selectedDate()))),
       ]),
-      doc.elem("section", { class: "rounds" }, rounds),
+      html.elem("section", { class: "rounds" }, rounds),
     ]),
   ];
 }
@@ -28,7 +28,7 @@ function datesList(dates, selectedDate) {
     if (date === selectedDate) {
       selected = { selected: "selected" };
     }
-    return doc.elem("option", { value: date, ...selected }, [doc.text(date)]);
+    return html.elem("option", { value: date, ...selected }, [html.text(date)]);
   }
 
   const options = [];
@@ -36,8 +36,8 @@ function datesList(dates, selectedDate) {
     options.push(option(date));
   }
 
-  return doc.elem("nav", { class: "dates" }, [
-    doc.elem(
+  return html.elem("nav", { class: "dates" }, [
+    html.elem(
       "select",
       {
         onchange: "main.handle({ action: 'showResults', date: this.value })",
@@ -48,36 +48,36 @@ function datesList(dates, selectedDate) {
 }
 
 function rankingTable(ranking) {
-  const head = doc.elem("thead", {}, [
-    doc.elem("tr", {}, [
-      doc.elem("th", { class: "name" }, [doc.text("Name")]),
-      doc.elem("th", {}, [doc.text("Spiele")]),
-      doc.elem("th", {}, [doc.text("Quote")]),
-      doc.elem("th", {}, [doc.text("Gegner")]),
-      doc.elem("th", {}, [doc.text("Schnitt")]),
+  const head = html.elem("thead", {}, [
+    html.elem("tr", {}, [
+      html.elem("th", { class: "name" }, [html.text("Name")]),
+      html.elem("th", {}, [html.text("Spiele")]),
+      html.elem("th", {}, [html.text("Quote")]),
+      html.elem("th", {}, [html.text("Gegner")]),
+      html.elem("th", {}, [html.text("Schnitt")]),
     ]),
   ]);
   const rows = [];
 
   for (const player of ranking) {
     rows.push(
-      doc.elem("tr", {}, [
-        doc.elem("td", { class: "name" }, [doc.text(player.name)]),
-        doc.elem("td", {}, [doc.text(player.count)]),
-        doc.elem("td", { class: "success" }, [
-          doc.text(percentage(player.success) + "%"),
+      html.elem("tr", {}, [
+        html.elem("td", { class: "name" }, [html.text(player.name)]),
+        html.elem("td", {}, [html.text(player.count)]),
+        html.elem("td", { class: "success" }, [
+          html.text(percentage(player.success) + "%"),
         ]),
-        doc.elem("td", { class: "success" }, [
-          doc.text(percentage(player.opponents.success) + "%"),
+        html.elem("td", { class: "success" }, [
+          html.text(percentage(player.opponents.success) + "%"),
         ]),
-        doc.elem("td", { class: "success" }, [
-          doc.text(percentage(player.average) + "%"),
+        html.elem("td", { class: "success" }, [
+          html.text(percentage(player.average) + "%"),
         ]),
       ])
     );
   }
 
-  return doc.elem("table", {}, [head, doc.elem("tbody", {}, rows)]);
+  return html.elem("table", {}, [head, html.elem("tbody", {}, rows)]);
 }
 
 function percentage(number) {
@@ -95,30 +95,30 @@ function roundTable(index, matches) {
   const rows = [];
   for (const match of matches) {
     rows.push(
-      doc.elem("tr", {}, [
-        doc.elem(
+      html.elem("tr", {}, [
+        html.elem(
           "td",
           {
             class: ["home", ...(util.homeWins(match.games) ? ["winner"] : [])],
           },
-          [doc.text(util.showParty(match.home))]
+          [html.text(util.showParty(match.home))]
         ),
-        doc.elem("td", { class: "result" }, [
-          doc.text(util.showResult(match.games)),
+        html.elem("td", { class: "result" }, [
+          html.text(util.showResult(match.games)),
         ]),
-        doc.elem(
+        html.elem(
           "td",
           {
             class: ["away", ...(util.homeWins(match.games) ? [] : ["winner"])],
           },
-          [doc.text(util.showParty(match.away))]
+          [html.text(util.showParty(match.away))]
         ),
       ])
     );
   }
 
-  return doc.elem("table", { class: "matches" }, [
-    doc.elem("caption", {}, [doc.text(parseInt(index) + 1 + ". Runde")]),
+  return html.elem("table", { class: "matches" }, [
+    html.elem("caption", {}, [html.text(parseInt(index) + 1 + ". Runde")]),
     ...rows,
   ]);
 }

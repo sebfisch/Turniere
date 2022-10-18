@@ -1,11 +1,11 @@
-import * as doc from "/js/lib/dom.js";
+import * as html from "/js/lib/html.js";
 
 export default function app(page, handlers) {
   const self = {};
 
   self.handle = ({ action, ...data }) => {
     handlers[action](data);
-    doc.reset(page(self));
+    html.reset(page(self));
   };
 
   self.cmd = (action, data = {}) => {
