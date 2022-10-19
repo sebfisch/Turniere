@@ -1,0 +1,19 @@
+.graph {
+  border-collapse: collapse;
+}
+
+.graph td {
+  margin-right: 1em;
+}
+
+.graph tr.border-top td {
+  border-top: thin solid white;
+}
+
+.graph span {
+  padding-left: 0.5em;
+}
+
+.graph span.bold {
+  font-weight: bold;
+}

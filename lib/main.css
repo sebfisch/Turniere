@@ -5,6 +5,7 @@
 @import url("/lib/fragments/dateSelector.css");
 
 @import url("/lib/pages/results.css");
+@import url("/lib/pages/graph.css");
 
 body {
   font-family: "Roboto", sans-serif;
