@@ -17,7 +17,6 @@ body {
 
 main {
   display: flex;
-  clear: right;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,5 +31,9 @@ main {
   body {
     font-family: "Roboto Condensed", sans-serif;
     font-size: 9pt;
+  }
+
+  header.links {
+    display: none;
   }
 }

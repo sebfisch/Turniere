@@ -1,33 +1,3 @@
-.ranking {
-  border-right: thin solid;
-}
-
-.ranking table {
-  font-size: 120%;
-  border-collapse: collapse;
-}
-
-.ranking th {
-  border-bottom: thin solid;
-}
-
-.ranking th,
-.ranking td {
-  padding: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-  text-align: center;
-}
-
-.ranking th.name,
-.ranking td.name {
-  text-align: right;
-}
-
-.ranking td.name {
-  font-weight: 400;
-}
-
 .rounds {
   display: flex;
   flex-wrap: wrap;
