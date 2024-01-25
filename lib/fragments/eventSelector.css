@@ -1,4 +1,5 @@
-.dates select {
+.events select {
+  appearance: none;
   -moz-appearance: none;
   background: white;
   border: none;

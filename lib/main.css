@@ -2,12 +2,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 
 @import url("/lib/fragments/pageHeader.css");
-@import url("/lib/fragments/dateSelector.css");
+@import url("/lib/fragments/eventSelector.css");
 
+@import url("/lib/pages/ranking.css");
 @import url("/lib/pages/results.css");
 @import url("/lib/pages/graph.css");
 
 body {
+  margin-bottom: 1em;
   font-family: "Roboto", sans-serif;
   font-size: 14pt;
   font-weight: 300;
@@ -15,13 +17,19 @@ body {
   color: black;
 }
 
-main {
-  display: flex;
+a:active,
+a:hover,
+a:visited {
+  color: black;
 }
 
 @media (prefers-color-scheme: dark) {
   body,
-  .dates select {
+  main a,
+  main a:active,
+  main a:hover,
+  main a:visited,
+  .events select {
     background-color: black;
     color: white;
   }

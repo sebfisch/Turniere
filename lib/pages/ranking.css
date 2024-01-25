@@ -1,0 +1,48 @@
+main.ranking {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  row-gap: 1em;
+  column-gap: 2em;
+}
+
+section {
+  border-left: thin solid;
+  padding-left: 0.5em;
+}
+
+section#ranking td {
+  padding-right: 1em;
+}
+
+.ranked ul {
+  margin: 0;
+  padding-left: 0;
+}
+
+.ranked li {
+  padding-left: 1em;
+  list-style-type: none;
+  vertical-align: top;
+}
+
+.ranked input {
+  margin-right: 0.5em;
+}
+
+#player-results table {
+  margin-bottom: 1em;
+}
+
+#player-results table td {
+  padding-right: 1em;
+}
+
+#player-results .home {
+  text-align: right;
+}
+
+#player-results .winner {
+  font-weight: 400;
+}
