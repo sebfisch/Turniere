@@ -16,18 +16,18 @@ section#ranking td {
   padding-right: 1em;
 }
 
-.ranked ul {
+.selector ul {
   margin: 0;
   padding-left: 0;
 }
 
-.ranked li {
+.selector li {
   padding-left: 1em;
   list-style-type: none;
   vertical-align: top;
 }
 
-.ranked input {
+.selector input {
   margin-right: 0.5em;
 }
 
