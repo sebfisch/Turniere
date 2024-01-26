@@ -28,9 +28,13 @@ select {
 }
 
 button,
+select {
+  cursor: pointer;
+}
+
+button,
 select,
 input {
-  cursor: pointer;
   border: none;
   border-bottom: thin solid;
   outline: none;
