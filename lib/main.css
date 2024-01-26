@@ -1,12 +1,12 @@
 @import url("https://unpkg.com/normalize.css/normalize.css");
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 
-@import url("/lib/fragments/pageHeader.css");
-@import url("/lib/fragments/eventSelector.css");
+@import url("./fragments/pageHeader.css");
+@import url("./fragments/eventSelector.css");
 
-@import url("/lib/pages/ranking.css");
-@import url("/lib/pages/results.css");
-@import url("/lib/pages/graph.css");
+@import url("./pages/ranking.css");
+@import url("./pages/results.css");
+@import url("./pages/graph.css");
 
 body {
   margin-bottom: 1em;
