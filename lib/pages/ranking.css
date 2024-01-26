@@ -46,3 +46,28 @@ section#ranking td {
 #player-results .winner {
   font-weight: 400;
 }
+
+.ranking button,
+.ranking select {
+  margin: 1em;
+}
+
+.matches-forms {
+  height: 900px;
+  max-height: 900px;
+  overflow: hidden;
+}
+
+#matches-inputs {
+  height: 90%;
+  max-height: 90%;
+  overflow-y: scroll;
+}
+
+input.home {
+  text-align: right;
+}
+
+input.games {
+  text-align: center;
+}

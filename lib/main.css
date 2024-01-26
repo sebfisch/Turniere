@@ -22,6 +22,19 @@ a:hover,
 a:visited {
   color: black;
 }
+select {
+  appearance: none;
+  -moz-appearance: none;
+}
+
+button,
+select,
+input {
+  cursor: pointer;
+  border: none;
+  border-bottom: thin solid;
+  outline: none;
+}
 
 @media (prefers-color-scheme: dark) {
   body,
@@ -29,6 +42,9 @@ a:visited {
   main a:active,
   main a:hover,
   main a:visited,
+  button,
+  input,
+  select,
   .events select {
     background-color: black;
     color: white;
