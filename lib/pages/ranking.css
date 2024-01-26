@@ -7,7 +7,7 @@ main.ranking {
   column-gap: 2em;
 }
 
-section {
+.ranking section {
   border-left: thin solid;
   padding-left: 0.5em;
 }
@@ -70,4 +70,16 @@ input.home {
 
 input.games {
   text-align: center;
+}
+
+@media print {
+  .selector,
+  .matches-forms,
+  #events,
+  #todays-players {
+    display: none;
+  }
+  .ranking a {
+    text-decoration: none;
+  }
 }
