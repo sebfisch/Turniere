@@ -1,3 +1,6 @@
 *.pdf
 *.json
+*.pyc
+*.csv
 ruby
+25_26
