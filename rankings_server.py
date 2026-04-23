@@ -172,6 +172,26 @@ HTML = """<!DOCTYPE html>
   }
   .export-btn:hover { background: #eee; }
 
+  .filter-select-all {
+    font-size: 0.7rem;
+    color: #aaa;
+    margin: -0.2rem 0 0.3rem 0.3rem;
+  }
+  .filter-select-all a { color: #aaa; text-decoration: none; cursor: pointer; }
+  .filter-select-all a:hover { color: #000; text-decoration: underline; }
+
+  .player-club-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #888;
+    margin: 0.5rem 0 0.1rem;
+    padding: 0 0.3rem;
+  }
+  .player-club-group-header:first-child { margin-top: 0.1rem; }
+  .player-club-group-header .filter-select-all { margin: 0; }
+
   @media (prefers-color-scheme: dark) {
     body { background: #111; color: #eee; }
     h1 { border-color: #444; }
@@ -187,6 +207,7 @@ HTML = """<!DOCTYPE html>
     .filter-group label:hover { background: #222; }
     .export-btn { border-color: #444; color: #eee; }
     .export-btn:hover { background: #222; }
+    .filter-select-all a:hover { color: #eee; }
   }
 </style>
 </head>
@@ -297,6 +318,23 @@ function playerClub(p) {
   return (typeof p === 'object' && p.club) ? p.club : null;
 }
 
+function makeSelectAllRow(onAll, onNone) {
+  const row = document.createElement('div');
+  row.className = 'filter-select-all';
+  const aAll = document.createElement('a');
+  aAll.textContent = 'alle';
+  aAll.href = '#';
+  aAll.addEventListener('click', e => { e.preventDefault(); onAll(); });
+  row.appendChild(aAll);
+  row.appendChild(document.createTextNode(' · '));
+  const aNone = document.createElement('a');
+  aNone.textContent = 'keine';
+  aNone.href = '#';
+  aNone.addEventListener('click', e => { e.preventDefault(); onNone(); });
+  row.appendChild(aNone);
+  return row;
+}
+
 function buildFilters(data) {
   const section = document.getElementById('filter-section');
 
@@ -312,6 +350,21 @@ function buildFilters(data) {
   const clubHeading = document.createElement('h3');
   clubHeading.textContent = 'Klubs';
   section.appendChild(clubHeading);
+
+  section.appendChild(makeSelectAllRow(
+    () => {
+      document.querySelectorAll('#club-filter input').forEach(cb => cb.checked = true);
+      updatePlayerFilter(currentData);
+      renderTable(currentData);
+      saveFilters();
+    },
+    () => {
+      document.querySelectorAll('#club-filter input').forEach(cb => cb.checked = false);
+      updatePlayerFilter(currentData);
+      renderTable(currentData);
+      saveFilters();
+    }
+  ));
 
   const clubGroup = document.createElement('div');
   clubGroup.className = 'filter-group';
@@ -345,6 +398,19 @@ function buildFilters(data) {
   playerHeading.textContent = 'Spieler';
   section.appendChild(playerHeading);
 
+  section.appendChild(makeSelectAllRow(
+    () => {
+      document.querySelectorAll('#player-filter input').forEach(cb => cb.checked = true);
+      renderTable(currentData);
+      saveFilters();
+    },
+    () => {
+      document.querySelectorAll('#player-filter input').forEach(cb => cb.checked = false);
+      renderTable(currentData);
+      saveFilters();
+    }
+  ));
+
   const playerGroup = document.createElement('div');
   playerGroup.className = 'filter-group';
   playerGroup.id = 'player-filter';
@@ -370,19 +436,53 @@ function updatePlayerFilter(data, overrideUnchecked = null) {
 
   playerGroup.innerHTML = '';
 
+  const byClub = new Map();
   data.forEach(e => {
     const club = playerClub(e.player);
     if (!club || !selectedClubs.has(club)) return;
-    const name = playerName(e.player);
-    const label = document.createElement('label');
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.value = name;
-    cb.checked = !prevUnchecked.has(name);
-    cb.addEventListener('change', () => { renderTable(currentData); saveFilters(); });
-    label.appendChild(cb);
-    label.appendChild(document.createTextNode(name));
-    playerGroup.appendChild(label);
+    if (!byClub.has(club)) byClub.set(club, []);
+    byClub.get(club).push(playerName(e.player));
+  });
+
+  byClub.forEach((players, club) => {
+    const clubCbs = [];
+
+    const header = document.createElement('div');
+    header.className = 'player-club-group-header';
+    const clubSpan = document.createElement('span');
+    clubSpan.textContent = club;
+    header.appendChild(clubSpan);
+
+    const links = document.createElement('span');
+    links.className = 'filter-select-all';
+    [['alle', true], ['keine', false]].forEach(([text, checked], i) => {
+      if (i) links.appendChild(document.createTextNode(' · '));
+      const a = document.createElement('a');
+      a.textContent = text;
+      a.href = '#';
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        clubCbs.forEach(cb => cb.checked = checked);
+        renderTable(currentData);
+        saveFilters();
+      });
+      links.appendChild(a);
+    });
+    header.appendChild(links);
+    playerGroup.appendChild(header);
+
+    players.forEach(name => {
+      const label = document.createElement('label');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = name;
+      cb.checked = !prevUnchecked.has(name);
+      cb.addEventListener('change', () => { renderTable(currentData); saveFilters(); });
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(name));
+      playerGroup.appendChild(label);
+      clubCbs.push(cb);
+    });
   });
 }
 
