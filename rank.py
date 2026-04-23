@@ -95,6 +95,12 @@ def rank_players(matches, max_iter=1000000, patience=1000):
         for m in matches
     ]
 
+    # Count matches per player
+    match_counts = [0] * n
+    for match in compiled:
+        for i in match['home'] + match['away']:
+            match_counts[i] += 1
+
     # Parameters
     skills = [0.0] * n
 
@@ -224,6 +230,7 @@ def rank_players(matches, max_iter=1000000, patience=1000):
                 'player': player_obj(p),
                 'skill': round(skills[idx[p]], 6),
                 'performance': round(math.exp(skills[idx[p]]), 6),
+                'matches': match_counts[idx[p]],
             }
             for p in players
         ],

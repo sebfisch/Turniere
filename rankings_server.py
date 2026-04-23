@@ -500,7 +500,7 @@ function renderTable(data) {
 
   const table = document.createElement('table');
   const thead = document.createElement('thead');
-  thead.innerHTML = '<tr><th>#</th><th>Spieler</th><th>Performance</th></tr>';
+  thead.innerHTML = '<tr><th>#</th><th>Spieler</th><th style="text-align:right">Spiele</th><th>Performance</th></tr>';
   const tbody = document.createElement('tbody');
 
   data.forEach((entry, i) => {
@@ -516,6 +516,7 @@ function renderTable(data) {
     tr.innerHTML =
       '<td>' + (i + 1) + '</td>' +
       '<td>' + playerCell + '</td>' +
+      '<td style="text-align:right">' + (entry.matches ?? '') + '</td>' +
       '<td>' + Math.round(entry.performance * 1000) + '</td>';
     tbody.appendChild(tr);
   });
@@ -541,13 +542,13 @@ function exportCSV() {
     : new Set(playerCbs.filter(cb => cb.checked).map(cb => cb.value));
 
   const csvQuote = s => '"' + s.replace(/"/g, '""') + '"';
-  const rows = ['#,Spieler,Verein,Performance'];
+  const rows = ['#,Spieler,Verein,Spiele,Performance'];
   currentData.forEach((entry, i) => {
     const name = playerName(entry.player);
     const club = playerClub(entry.player);
     if (club && !selectedClubs.has(club)) return;
     if (selectedPlayers && !selectedPlayers.has(name)) return;
-    rows.push((i + 1) + ',' + csvQuote(name) + ',' + (club ? csvQuote(club) : '') + ',' + Math.round(entry.performance * 1000));
+    rows.push((i + 1) + ',' + csvQuote(name) + ',' + (club ? csvQuote(club) : '') + ',' + (entry.matches ?? '') + ',' + Math.round(entry.performance * 1000));
   });
 
   const blob = new Blob([rows.join('\\r\\n')], { type: 'text/csv;charset=utf-8;' });
