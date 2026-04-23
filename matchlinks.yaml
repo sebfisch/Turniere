@@ -1,0 +1,48 @@
+matches:
+  25_26:
+    league:
+      vl: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=1
+      lln: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=2
+      lls: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=3
+      nw1: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=6
+      nw2: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=7
+      nw3: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=8
+      no1: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=11
+      no2: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=12
+      sw1: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=16
+      sw2: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=17
+      so1: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=21
+      so2: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=22
+    tournament:
+      lem: https://dbv.turnier.de/tournament/c709f547-2dee-4697-8f0f-ec262b992760/matches/20251206
+      rlt1: https://dbv.turnier.de/tournament/1eb078b2-8b72-407d-b60a-149d05ed710e/matches/20250823
+      rlt2: https://dbv.turnier.de/tournament/ab497560-d838-403d-beb0-d86d4ea32084/Matches
+      lemO30: https://dbv.turnier.de/tournament/02568a18-d1e7-4c55-b176-c835b53f0f22/matches/20260214
+      sprotte: https://dbv.turnier.de/tournament/12b5758b-1a70-44cf-896e-5007fc035d99/matches/20250906
+      sachsenwald: https://dbv.turnier.de/tournament/6f5cc3ad-b3b5-441f-a36a-f042f8a7d16c/matches/20250705
+      kronshagen: https://dbv.turnier.de/tournament/0bced6bd-e7aa-4c18-9854-788f56eb2bef/matches/20250607
+      oldesloe: https://dbv.turnier.de/tournament/616be7af-41b5-4c8b-b5cb-1fad09f9889a/matches/20250329
+  24_25:
+    league:
+      vl: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=1
+      lln: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=2
+      lls: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=3
+      nw1: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=6
+      nw2: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=7
+      nw3: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=8
+      no1: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=11
+      no2: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=12
+      no3: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=13
+      sw1: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=19
+      sw2: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=20
+      so1: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=24
+      so2: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=25
+      so3: https://dbv.turnier.de/sport/drawmatches.aspx?id=5A466F19-60CB-43C4-ACD1-758C018EA467&draw=26
+    tournament:
+      lem: https://dbv.turnier.de/tournament/c9456092-a6a6-4f34-95f6-0cd5cc558fee/matches/20241207
+      rem: https://dbv.turnier.de/tournament/59a8777b-f1a7-4124-a87c-dd376ab17fe4/matches/20240608
+      rrlt: https://dbv.turnier.de/tournament/ecebc6ab-c198-418e-8170-623581a7a052/Matches
+      lemO30: https://dbv.turnier.de/tournament/2a167909-bf12-4707-acb7-2cdfa1ef2020/matches/20250208
+      sachsenwald: https://dbv.turnier.de/tournament/54f7e5f8-7cb8-4476-a6fe-31ff7a50335b/matches/20240706
+      kronshagen: https://dbv.turnier.de/tournament/96d16b9e-ac59-40c9-8b7f-9bf6ba69c5c2/matches/20240518
+      oldesloe: https://dbv.turnier.de/tournament/19ad467d-392e-4513-8282-225fbcd3af56/matches/20240427
