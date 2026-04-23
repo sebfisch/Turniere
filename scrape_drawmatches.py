@@ -283,7 +283,7 @@ def parse_tournament_day(
                 a = value_div.find("a", class_="nav-link")
                 if not a:
                     continue
-                name = re.sub(r'\s*\[\d+\]', '', a.get_text(strip=True)).strip()
+                name = re.sub(r'\s*\[[^\]]*\]', '', a.get_text(strip=True)).strip()
                 if not name:
                     continue
                 club_id = a.get("data-club-id", "")
