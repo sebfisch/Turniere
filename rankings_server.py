@@ -246,30 +246,39 @@ async function loadTree() {
   navTree.appendChild(buildNode(tree, ''));
 }
 
+function buildFileList(names, path) {
+  const ul = document.createElement('ul');
+  names.forEach(name => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const filePath = path ? path + '/' + name : name;
+    a.textContent = name;
+    a.href = '#' + filePath;
+    a.dataset.path = filePath;
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('#nav-tree a.active').forEach(el => el.classList.remove('active'));
+      a.classList.add('active');
+      loadRanking(filePath);
+    });
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+  return ul;
+}
+
 function buildNode(node, path) {
   if (Array.isArray(node)) {
-    const ul = document.createElement('ul');
-    node.forEach(name => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      const filePath = path ? path + '/' + name : name;
-      a.textContent = name;
-      a.href = '#' + filePath;
-      a.dataset.path = filePath;
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        document.querySelectorAll('#nav-tree a.active').forEach(el => el.classList.remove('active'));
-        a.classList.add('active');
-        loadRanking(filePath);
-      });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-    return ul;
+    return buildFileList(node, path);
   }
 
   const frag = document.createDocumentFragment();
-  Object.keys(node).sort().forEach(key => {
+  Object.keys(node).sort((a, b) => {
+    if (a === '') return 1;
+    if (b === '') return -1;
+    return a.localeCompare(b);
+  }).forEach(key => {
+    if (key === '') { frag.appendChild(buildFileList(node[''], path)); return; }
     const childPath = path ? path + '/' + key : key;
     const details = document.createElement('details');
     details.open = true;
@@ -338,57 +347,60 @@ function makeSelectAllRow(onAll, onNone) {
 function buildFilters(data) {
   const section = document.getElementById('filter-section');
 
-  const clubs = [...new Set(data.map(e => playerClub(e.player)).filter(Boolean))].sort();
-  if (clubs.length === 0) {
+  if (data.length === 0) {
     section.style.display = 'none';
     return;
   }
 
+  const clubs = [...new Set(data.map(e => playerClub(e.player)).filter(Boolean))].sort();
+
   section.innerHTML = '';
   section.style.display = '';
 
-  const clubHeading = document.createElement('h3');
-  clubHeading.textContent = 'Klubs';
-  section.appendChild(clubHeading);
+  if (clubs.length > 0) {
+    const clubHeading = document.createElement('h3');
+    clubHeading.textContent = 'Klubs';
+    section.appendChild(clubHeading);
 
-  section.appendChild(makeSelectAllRow(
-    () => {
-      document.querySelectorAll('#club-filter input').forEach(cb => cb.checked = true);
-      updatePlayerFilter(currentData);
-      renderTable(currentData);
-      saveFilters();
-    },
-    () => {
-      document.querySelectorAll('#club-filter input').forEach(cb => cb.checked = false);
-      updatePlayerFilter(currentData);
-      renderTable(currentData);
-      saveFilters();
-    }
-  ));
+    section.appendChild(makeSelectAllRow(
+      () => {
+        document.querySelectorAll('#club-filter input').forEach(cb => cb.checked = true);
+        updatePlayerFilter(currentData);
+        renderTable(currentData);
+        saveFilters();
+      },
+      () => {
+        document.querySelectorAll('#club-filter input').forEach(cb => cb.checked = false);
+        updatePlayerFilter(currentData);
+        renderTable(currentData);
+        saveFilters();
+      }
+    ));
 
-  const clubGroup = document.createElement('div');
-  clubGroup.className = 'filter-group';
-  clubGroup.id = 'club-filter';
-  clubs.forEach(club => {
-    const label = document.createElement('label');
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.value = club;
-    cb.checked = true;
-    cb.addEventListener('change', () => {
-      updatePlayerFilter(currentData);
-      renderTable(currentData);
-      saveFilters();
+    const clubGroup = document.createElement('div');
+    clubGroup.className = 'filter-group';
+    clubGroup.id = 'club-filter';
+    clubs.forEach(club => {
+      const label = document.createElement('label');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = club;
+      cb.checked = true;
+      cb.addEventListener('change', () => {
+        updatePlayerFilter(currentData);
+        renderTable(currentData);
+        saveFilters();
+      });
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(club));
+      clubGroup.appendChild(label);
     });
-    label.appendChild(cb);
-    label.appendChild(document.createTextNode(club));
-    clubGroup.appendChild(label);
-  });
-  section.appendChild(clubGroup);
+    section.appendChild(clubGroup);
+  }
 
   // Restore saved club filter state
   const saved = loadFilters();
-  if (saved?.uncheckedClubs?.length) {
+  if (clubs.length > 0 && saved?.uncheckedClubs?.length) {
     document.querySelectorAll('#club-filter input').forEach(cb => {
       if (saved.uncheckedClubs.includes(cb.value)) cb.checked = false;
     });
@@ -430,29 +442,31 @@ function updatePlayerFilter(data, overrideUnchecked = null) {
   if (!playerGroup) return;
 
   const selectedClubs = getSelectedClubs();
+  const hasClubFilter = document.getElementById('club-filter') !== null;
   const prevUnchecked = overrideUnchecked !== null
     ? new Set(overrideUnchecked)
     : new Set([...document.querySelectorAll('#player-filter input:not(:checked)')].map(cb => cb.value));
 
   playerGroup.innerHTML = '';
 
-  const byClub = new Map();
-  data.forEach(e => {
-    const club = playerClub(e.player);
-    if (!club || !selectedClubs.has(club)) return;
-    if (!byClub.has(club)) byClub.set(club, []);
-    byClub.get(club).push(playerName(e.player));
-  });
+  function makePlayerCheckbox(name) {
+    const label = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.value = name;
+    cb.checked = !prevUnchecked.has(name);
+    cb.addEventListener('change', () => { renderTable(currentData); saveFilters(); });
+    label.appendChild(cb);
+    label.appendChild(document.createTextNode(name));
+    return { label, cb };
+  }
 
-  byClub.forEach((players, club) => {
-    const clubCbs = [];
-
+  function makeClubGroupHeader(title, getCbs) {
     const header = document.createElement('div');
     header.className = 'player-club-group-header';
     const clubSpan = document.createElement('span');
-    clubSpan.textContent = club;
+    clubSpan.textContent = title;
     header.appendChild(clubSpan);
-
     const links = document.createElement('span');
     links.className = 'filter-select-all';
     [['alle', true], ['keine', false]].forEach(([text, checked], i) => {
@@ -462,28 +476,57 @@ function updatePlayerFilter(data, overrideUnchecked = null) {
       a.href = '#';
       a.addEventListener('click', e => {
         e.preventDefault();
-        clubCbs.forEach(cb => cb.checked = checked);
+        getCbs().forEach(cb => cb.checked = checked);
         renderTable(currentData);
         saveFilters();
       });
       links.appendChild(a);
     });
     header.appendChild(links);
-    playerGroup.appendChild(header);
+    return header;
+  }
 
-    players.forEach(name => {
-      const label = document.createElement('label');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.value = name;
-      cb.checked = !prevUnchecked.has(name);
-      cb.addEventListener('change', () => { renderTable(currentData); saveFilters(); });
-      label.appendChild(cb);
-      label.appendChild(document.createTextNode(name));
-      playerGroup.appendChild(label);
-      clubCbs.push(cb);
+  if (hasClubFilter) {
+    const byClub = new Map();
+    const noClubPlayers = [];
+    data.forEach(e => {
+      const club = playerClub(e.player);
+      const name = playerName(e.player);
+      if (!club) { noClubPlayers.push(name); return; }
+      if (!selectedClubs.has(club)) return;
+      if (!byClub.has(club)) byClub.set(club, []);
+      byClub.get(club).push(name);
     });
-  });
+
+    const sortedByClub = [...byClub.entries()].sort(([a], [b]) => a.localeCompare(b));
+    sortedByClub.forEach(([club, players]) => {
+      players.sort((a, b) => a.localeCompare(b));
+      const clubCbs = [];
+      playerGroup.appendChild(makeClubGroupHeader(club, () => clubCbs));
+      players.forEach(name => {
+        const { label, cb } = makePlayerCheckbox(name);
+        playerGroup.appendChild(label);
+        clubCbs.push(cb);
+      });
+    });
+
+    if (noClubPlayers.length > 0) {
+      noClubPlayers.sort((a, b) => a.localeCompare(b));
+      const noClubCbs = [];
+      playerGroup.appendChild(makeClubGroupHeader('Ohne Verein', () => noClubCbs));
+      noClubPlayers.forEach(name => {
+        const { label, cb } = makePlayerCheckbox(name);
+        playerGroup.appendChild(label);
+        noClubCbs.push(cb);
+      });
+    }
+  } else {
+    const allPlayers = [...new Set(data.map(e => playerName(e.player)))].sort((a, b) => a.localeCompare(b));
+    allPlayers.forEach(name => {
+      const { label } = makePlayerCheckbox(name);
+      playerGroup.appendChild(label);
+    });
+  }
 }
 
 function renderTable(data) {
@@ -585,9 +628,7 @@ def build_tree(base: Path):
 
     if files:
         if result:
-            # mixed: attach files under a special key — keep as list at this level
-            # by treating files as direct children alongside dirs; store as-is
-            result["__files__"] = files
+            result[""] = files  # "" can never be a valid dir/file name
         else:
             return files
 
