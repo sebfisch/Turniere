@@ -1,4 +1,12 @@
 matches:
+  26_27:
+    tournament:
+      sachsenwald: https://dbv.turnier.de/tournament/57c4dafc-9ca3-461d-976d-90ef63e65539/matches/20260620
+      # rem: https://dbv.turnier.de/tournament/7215eba1-3bbe-4b07-8971-a3ddebc24e30/matches/20260919
+      # schleswig: https://dbv.turnier.de/tournament/27e9ce0a-55e0-4178-868a-1d94873090b2/matches/20261024
+      sprotte: https://dbv.turnier.de/tournament/4cdf5506-952c-461e-85af-38ce1d08cb8b/matches/20260815
+      oldesloe: https://dbv.turnier.de/tournament/4931b1ff-f3e8-4687-8c1a-e6a9e3faff78/matches/20260502
+      kronshagen: https://dbv.turnier.de/tournament/6f34fe53-17f3-48fc-95d7-34a142a18372/matches/20260523
   25_26:
     league:
       vl: https://dbv.turnier.de/sport/drawmatches.aspx?id=97942D0C-DABA-453D-AF6B-78FE0548BFC0&draw=1
