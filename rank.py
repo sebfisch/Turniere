@@ -7,6 +7,12 @@ Usage:
   python3 rank.py 25_26/*.json --discipline HD
   python3 rank.py 25_26/club.json --list-events
   python3 rank.py 25_26/*.json --filter "Landesliga.*HD"
+  python3 rank.py rankings/25_26_27.yaml
+
+YAML config mode: pass a .yaml file instead of JSON match files to build
+several rankings in one run. Output files are written next to the config:
+<config dir>/<config stem>/<top-level key>/<ranking name>.json. Match file
+globs are resolved relative to the current working directory. Requires PyYAML.
 """
 
 import argparse
@@ -37,11 +43,30 @@ def load_matches(files):
     return matches
 
 
+_MIXED_RE = re.compile(r'^(?:GD|MIX|MX)(\d*)$')
+
+
+def canon_discipline(code):
+    """Canonical form of a discipline code: GD, MIX and MX are equivalent."""
+    m = _MIXED_RE.match(code)
+    return 'MX' + m.group(1) if m else code
+
+
+def discipline_matches(event, disc):
+    """True if the event's discipline (its last word) matches disc.
+
+    Prefix match, so HE also catches HE1 and HE2; GD and MX catch each other.
+    """
+    words = event.split()
+    code = canon_discipline(words[-1]) if words else ''
+    return code.startswith(canon_discipline(disc))
+
+
 def build_event_filter(args):
     predicates = []
     if args.discipline:
         for d in args.discipline:
-            predicates.append(lambda e, d=d: e.split()[-1] == d)
+            predicates.append(lambda e, d=d: discipline_matches(e, d))
     if args.event:
         event_set = set(args.event)
         predicates.append(lambda e: e in event_set)
@@ -240,12 +265,82 @@ def rank_players(matches, max_iter=1000000, patience=1000):
     return result
 
 
+def run_config(config_path, max_iter=1000000, patience=1000):
+    """Build multiple rankings from a YAML config file.
+
+    Output goes to <config stem>/<top-level key>/<ranking name>.json next
+    to the config file; each top-level key holds `matches` (globs,
+    resolved from the cwd) and `rankings` (name -> list of disciplines).
+    """
+    import glob
+    import os
+
+    import yaml
+
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    config_dir = os.path.dirname(os.path.abspath(config_path))
+    config_stem = os.path.splitext(os.path.basename(config_path))[0]
+
+    for group, spec in config.items():
+        patterns = spec['matches']
+        if isinstance(patterns, str):
+            patterns = [patterns]
+        files = sorted({
+            path
+            for pattern in patterns
+            for path in glob.glob(pattern, recursive=True)
+        })
+        if not files:
+            print(f"{group}: no files match {patterns}", file=sys.stderr)
+            continue
+        matches = load_matches(files)
+        print(
+            f"{group}: {len(matches)} matches from {len(files)} files",
+            file=sys.stderr,
+        )
+
+        out_dir = os.path.join(config_dir, config_stem, group)
+        os.makedirs(out_dir, exist_ok=True)
+
+        for name, disciplines in spec['rankings'].items():
+            filtered = [
+                m for m in matches
+                if m.get('games') and len(m['games']) > 0
+                and any(
+                    discipline_matches(m.get('event', ''), d)
+                    for d in disciplines
+                )
+            ]
+            print(
+                f"{group}/{name}: {len(filtered)} matches "
+                f"({', '.join(disciplines)})",
+                file=sys.stderr,
+            )
+            if filtered:
+                result = rank_players(
+                    filtered, max_iter=max_iter, patience=patience
+                )
+            else:
+                print(f"{group}/{name}: no matches, writing empty ranking",
+                      file=sys.stderr)
+                result = []
+            out_path = os.path.join(out_dir, f"{name}.json")
+            with open(out_path, 'w') as f:
+                json.dump(result, f, indent=2, ensure_ascii=False)
+                f.write('\n')
+            print(f"Wrote {out_path}", file=sys.stderr)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Rank badminton players from match JSON files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Discipline codes: Einzel, Doppel, HE1, HE2, HD, DE, DD, GD
+Discipline codes: Einzel, Doppel, HE, HE1, HE2, HD, DE, DD, GD, MX
+Disciplines match by prefix (HE also catches HE1 and HE2), and GD/MX/MIX
+are treated as equivalent.
 
 Examples:
   %(prog)s 25_26/*.json --list-events
@@ -254,9 +349,13 @@ Examples:
   %(prog)s 25_26/club.json --discipline Einzel
   %(prog)s 25_26/*.json --filter "Landesliga.*HD"
   %(prog)s 25_26/*.json --event "SHBV – O19-Landesliga – Landesliga Nord HD"
+  %(prog)s rankings/25_26_27.yaml
 """,
     )
-    parser.add_argument('files', nargs='+', help='JSON match files')
+    parser.add_argument(
+        'files', nargs='+',
+        help='JSON match files, or YAML config files for batch mode',
+    )
     parser.add_argument(
         '--max-iter', type=int, default=1000000, metavar='N',
         help='Maximum optimisation steps (default: 1000000).',
@@ -282,6 +381,18 @@ Examples:
         help='List all events with match counts as JSON and exit.',
     )
     args = parser.parse_args()
+
+    yaml_files = [f for f in args.files if f.endswith(('.yaml', '.yml'))]
+    if yaml_files:
+        if len(yaml_files) != len(args.files):
+            parser.error('cannot mix YAML config files with JSON match files')
+        if args.discipline or args.event or args.filter or args.list_events:
+            parser.error('filter options do not apply in YAML config mode')
+        for config_path in yaml_files:
+            run_config(
+                config_path, max_iter=args.max_iter, patience=args.patience
+            )
+        return
 
     matches = load_matches(args.files)
 

@@ -1,0 +1,9 @@
+# creates
+#   25_26_27/extern_intern/einzel.json
+#   25_26_27/extern_intern/doppel.json
+# next to this file
+extern_intern:
+  matches: ["matches/*26*/**/*.json"]
+  rankings:
+    einzel: ["Einzel", "HE", "HE1", "HE2", "DE"] # prefix match for HE?
+    doppel: ["Doppel", "HD", "DD", "GD", "MX"] # automatic MX <-> GD?
