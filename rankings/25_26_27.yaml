@@ -5,5 +5,5 @@
 extern_intern:
   matches: ["matches/*26*/**/*.json"]
   rankings:
-    einzel: ["Einzel", "HE", "HE1", "HE2", "DE"] # prefix match for HE?
-    doppel: ["Doppel", "HD", "DD", "GD", "MX"] # automatic MX <-> GD?
+    einzel: ["Einzel", "HE", "DE"] # prefix match for HE
+    doppel: ["Doppel", "HD", "DD", "MX"] # automatic MX <-> GD
